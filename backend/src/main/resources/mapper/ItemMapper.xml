@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seandad.app.item.ItemMapper">
+
+    <select id="findAll" resultType="com.seandad.app.item.Item">
+        SELECT id, name, created_at
+          FROM item
+         ORDER BY id DESC
+    </select>
+
+    <insert id="insert" parameterType="com.seandad.app.item.Item"
+            useGeneratedKeys="true" keyProperty="id,createdAt" keyColumn="id,created_at">
+        INSERT INTO item (name)
+        VALUES (#{name})
+    </insert>
+
+</mapper>
