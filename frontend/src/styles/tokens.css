@@ -1,0 +1,71 @@
+/* 디자인 토큰 (웹 화면 표준 SD-STD-UI-001 5장). 색상·글꼴·간격 값은 이 파일에만 씁니다. */
+:root {
+  /* 5.1 색상 */
+  --color-primary: #1f4e8c;
+  --color-primary-hover: #173d6e;
+  --color-primary-50: #eef3fa;
+  --color-text: #1a2230;
+  --color-text-sub: #556070;
+  --color-text-disabled: #8a94a3;
+  --color-border: #d5dbe3;
+  --color-bg: #f5f7fa;
+  --color-success: #1e8e3e;
+  --color-warning: #e37400;
+  --color-danger: #d93025;
+  --color-info: #1a73e8;
+
+  /* 표준 보완 토큰 (지침서에 값이 없어 추가: 카드·입력칸 바탕, Primary 위 글자, 팝업 딤) */
+  --color-surface: #fff;
+  --color-on-primary: #fff;
+  --color-dim: rgb(16 24 40 / 45%);
+
+  /* 차트 팔레트 (이 순서로 사용) */
+  --chart-1: #1f4e8c;
+  --chart-2: #2e9e8f;
+  --chart-3: #e8a33d;
+  --chart-4: #7a5ac8;
+  --chart-5: #d9534f;
+
+  /* 5.2 글꼴 */
+  --font-family: pretendard, 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  --font-mono: ui-monospace, consolas, monospace;
+  --font-title: 22px;
+  --font-section: 16px;
+  --font-body: 14px;
+  --font-small: 13px;
+  --font-caption: 12px;
+  --font-kpi: 28px;
+
+  /* 5.3 간격·모서리·그림자 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 6%);
+  --shadow-modal: 0 12px 32px rgb(16 24 40 / 18%);
+  --focus-ring: 2px solid var(--color-info);
+
+  /* 크기 */
+  --height-control: 32px;
+  --height-control-s: 28px;
+  --height-control-l: 40px;
+  --height-header: 56px;
+  --height-row: 40px;
+  --width-lnb: 240px;
+  --width-lnb-collapsed: 64px;
+  --width-label: 140px;
+  --width-input-code: 160px;
+  --width-input-name: 240px;
+  --width-form-max: 1200px;
+  --width-min-screen: 1280px;
+  --width-modal-s: 480px;
+  --width-modal-m: 720px;
+  --width-modal-l: 960px;
+  --width-toast: 320px;
+}

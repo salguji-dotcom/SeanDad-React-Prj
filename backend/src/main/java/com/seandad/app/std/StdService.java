@@ -1,5 +1,6 @@
 package com.seandad.app.std;
 
+import com.seandad.app.common.PageResponse;
 import com.seandad.app.std.StdTrmSuggestion.WordPiece;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class StdService {
 
-    private static final int SEARCH_LIMIT = 100;
     /** PostgreSQL 바인드 변수 한도(32767)를 넘지 않도록 나눠서 INSERT */
     private static final int INSERT_CHUNK = 1000;
 
@@ -28,18 +28,18 @@ public class StdService {
     // ======================== 조회 ========================
 
     @Transactional(readOnly = true)
-    public List<StdTrm> searchTrms(String keyword, boolean includeDiscarded) {
-        return stdMapper.searchTrms(nvl(keyword), includeDiscarded, SEARCH_LIMIT);
+    public PageResponse<StdTrm> searchTrms(StdSearch search) {
+        return new PageResponse<>(stdMapper.searchTrms(search), stdMapper.countTrms(search));
     }
 
     @Transactional(readOnly = true)
-    public List<StdWord> searchWords(String keyword, boolean includeDiscarded) {
-        return stdMapper.searchWords(nvl(keyword), includeDiscarded, SEARCH_LIMIT);
+    public PageResponse<StdWord> searchWords(StdSearch search) {
+        return new PageResponse<>(stdMapper.searchWords(search), stdMapper.countWords(search));
     }
 
     @Transactional(readOnly = true)
-    public List<StdDmn> searchDmns(String keyword, boolean includeDiscarded) {
-        return stdMapper.searchDmns(nvl(keyword), includeDiscarded);
+    public PageResponse<StdDmn> searchDmns(StdSearch search) {
+        return new PageResponse<>(stdMapper.searchDmns(search), stdMapper.countDmns(search));
     }
 
     @Transactional(readOnly = true)

@@ -1,0 +1,115 @@
+.wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.grid {
+  width: 100%;
+  font-size: var(--font-body);
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.grid th,
+.grid td {
+  height: var(--height-row);
+  padding: 0 var(--space-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.grid th {
+  font-size: var(--font-small);
+  font-weight: 600;
+  color: var(--color-text-sub);
+  text-align: center;
+  background: var(--color-primary-50);
+}
+
+.grid tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.left {
+  text-align: left;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.wide {
+  min-width: 160px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover,
+.clickable:focus-visible {
+  background: var(--color-primary-50);
+}
+
+.sortButton {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.sortIcon {
+  font-size: 10px;
+  color: var(--color-text-disabled);
+}
+
+.skeleton {
+  display: block;
+  height: 12px;
+  background: linear-gradient(90deg, var(--color-bg), var(--color-border), var(--color-bg));
+  background-size: 200% 100%;
+  border-radius: var(--radius-sm);
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.grid td.empty {
+  height: auto;
+  padding: var(--space-6) var(--space-3);
+  color: var(--color-text-sub);
+  text-align: center;
+  white-space: normal;
+}
+
+.emptyIcon {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-title);
+  color: var(--color-text-disabled);
+}
+
+.emptyAction {
+  margin-top: var(--space-3);
+}

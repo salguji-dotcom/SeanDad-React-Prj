@@ -31,12 +31,12 @@ pipeline {
             }
         }
 
-        stage('Frontend Build') {
+        stage('Frontend Lint & Build') {
             steps {
                 dir('frontend') {
                     sh '''
                         docker run --rm -v "$PWD":/app -w /app \
-                          node:22-alpine sh -c "npm ci && npm run build"
+                          node:22-alpine sh -c "npm ci && npm run lint && npm run build"
                     '''
                 }
             }

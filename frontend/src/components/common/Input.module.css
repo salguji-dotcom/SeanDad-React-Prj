@@ -1,0 +1,62 @@
+.input,
+.textarea,
+.select {
+  height: var(--height-control);
+  padding: 0 var(--space-2);
+  font-family: inherit;
+  font-size: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-text-disabled);
+}
+
+.input:disabled,
+.textarea:disabled,
+.select:disabled {
+  color: var(--color-text-disabled);
+  background: var(--color-bg);
+}
+
+:global([data-invalid='true']) .input,
+:global([data-invalid='true']) .textarea,
+:global([data-invalid='true']) .select {
+  border-color: var(--color-danger);
+}
+
+.textarea {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: var(--space-2);
+  resize: vertical;
+}
+
+.code {
+  width: var(--width-input-code);
+}
+
+.name {
+  width: var(--width-input-name);
+}
+
+.full {
+  width: 100%;
+}
+
+.number {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.counter {
+  margin-top: var(--space-1);
+  font-size: var(--font-caption);
+  color: var(--color-text-sub);
+  text-align: right;
+}

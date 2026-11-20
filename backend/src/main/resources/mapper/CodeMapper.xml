@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seandad.app.code.CodeMapper">
+
+    <!-- 그룹코드의 사용 중인 공통코드 (정렬순서대로) -->
+    <select id="findByGroupCd" resultType="com.seandad.app.code.ComCd">
+        SELECT c.group_cd
+             , c.cd
+             , c.cd_nm
+             , c.sort_seq
+          FROM tb_com_cd c
+          JOIN tb_com_cd_group g ON g.group_cd = c.group_cd
+         WHERE c.group_cd = #{groupCd}
+           AND c.use_yn = 'Y'
+           AND g.use_yn = 'Y'
+         ORDER BY c.sort_seq, c.cd
+    </select>
+
+</mapper>

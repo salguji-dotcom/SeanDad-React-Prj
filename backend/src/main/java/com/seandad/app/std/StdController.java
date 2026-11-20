@@ -1,7 +1,7 @@
 package com.seandad.app.std;
 
+import com.seandad.app.common.PageResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,22 +25,20 @@ public class StdController {
         return stdService.summary();
     }
 
+    /** 목록: ?keyword=&includeDiscarded=false&page=1&size=20 */
     @GetMapping("/terms")
-    public List<StdTrm> terms(@RequestParam(defaultValue = "") String keyword,
-                              @RequestParam(defaultValue = "false") boolean includeDiscarded) {
-        return stdService.searchTrms(keyword, includeDiscarded);
+    public PageResponse<StdTrm> terms(StdSearch search) {
+        return stdService.searchTrms(search);
     }
 
     @GetMapping("/words")
-    public List<StdWord> words(@RequestParam(defaultValue = "") String keyword,
-                               @RequestParam(defaultValue = "false") boolean includeDiscarded) {
-        return stdService.searchWords(keyword, includeDiscarded);
+    public PageResponse<StdWord> words(StdSearch search) {
+        return stdService.searchWords(search);
     }
 
     @GetMapping("/domains")
-    public List<StdDmn> domains(@RequestParam(defaultValue = "") String keyword,
-                                @RequestParam(defaultValue = "false") boolean includeDiscarded) {
-        return stdService.searchDmns(keyword, includeDiscarded);
+    public PageResponse<StdDmn> domains(StdSearch search) {
+        return stdService.searchDmns(search);
     }
 
     /** 용어 확인: 표준용어면 그대로, 없으면 표준단어 조합으로 신규 용어 제안 */

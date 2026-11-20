@@ -1,0 +1,16 @@
+.judge {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.messages {
+  padding-left: var(--space-4);
+  margin: 0;
+  color: var(--color-warning);
+  white-space: normal;
+}

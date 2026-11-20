@@ -1,0 +1,21 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--height-control);
+  margin-bottom: var(--space-3);
+}
+
+.total {
+  font-size: var(--font-body);
+  color: var(--color-text-sub);
+}
+
+.total strong {
+  color: var(--color-primary);
+}
+
+.buttons {
+  display: flex;
+  gap: var(--space-2);
+}

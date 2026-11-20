@@ -1,0 +1,35 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  min-width: var(--width-min-screen);
+  font-family: var(--font-family);
+  font-size: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+/* 포커스 표시는 없애지 않습니다 (표준 14.2) */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 1px;
+}

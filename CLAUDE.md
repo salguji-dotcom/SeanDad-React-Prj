@@ -8,7 +8,7 @@
 |---|---|
 | 백엔드 | Spring Boot 3.5 / Java 17 / Gradle (`backend/`, 패키지 `com.seandad.app`) |
 | DB 연동 | MyBatis (XML 매퍼: `backend/src/main/resources/mapper/`) |
-| 프론트엔드 | React 18 + Vite + React Router (`frontend/`) |
+| 프론트엔드 | React 18 + Vite, React Router v6, TanStack Query, React Hook Form + zod, Zustand, axios (`frontend/`) |
 | DB | PostgreSQL 16 (초기 스키마: `db/init/`) |
 | 실행/배포 | Docker Compose, Jenkins (`Jenkinsfile`) |
 
@@ -22,8 +22,9 @@ docker compose up -d --build
 cd backend && ./gradlew test
 cd backend && DB_URL=jdbc:postgresql://localhost:5433/appdb ./gradlew bootRun
 
-# 프론트엔드 개발 서버 (/api → localhost:8080 프록시)
+# 프론트엔드 개발 서버 (/api → localhost:8080 프록시) / 검사·빌드
 cd frontend && npm run dev
+cd frontend && npm run lint && npm run build
 ```
 
 - `db/init/*.sql`은 DB 볼륨이 처음 만들어질 때만 실행됩니다. 스키마를 바꾸면 변경 SQL을 직접 실행하거나, 데이터 삭제를 감수하고 `docker compose down -v` 후 다시 띄웁니다. `down -v`는 사용자 확인 없이 실행하지 않습니다.
@@ -35,7 +36,12 @@ cd frontend && npm run dev
 - 백엔드: `com.seandad.app.<기능>` 아래 `Controller`, `Service`, `Mapper`(인터페이스), DTO/VO
 - SQL: `mapper/<기능>Mapper.xml` (SQL은 XML에만 작성, 어노테이션 SQL 사용 안 함)
 - API 경로: `/api/<기능 복수형>` (예: `/api/items`)
-- 프론트엔드: `src/api/<기능>Api.js`, `src/pages/<화면>Page.jsx`, 라우트는 `src/App.jsx`에 등록하고 대시보드(`DashboardPage.jsx`)에 바로가기를 추가
+- 목록 API는 서버 페이징: `PageQuery`(page·size·sort)를 상속한 조회 조건 → `PageResponse { list, totalCount }`
+- 프론트엔드: **웹 화면 표준을 따릅니다** → `.claude/rules/ui-standard.md` (원본 `docs/standard/SD-STD-UI-001·002`)
+  - 화면 ID·파일: `src/pages/<업무코드>/<리소스>/<화면ID>.jsx`, API: `src/api/<업무코드>/<리소스>Api.js` + Query Hook
+  - 라우트는 `src/app/router.jsx`, 메뉴(LNB·Breadcrumb)는 `src/constants/routes.js`에 등록
+  - 업무코드: `CM` 공통(CM0001M 대시보드), `PR` 품목관리(PR0101L/D/R), `SY` 표준 사전(SY0101L~SY0104R)
+  - 공통코드는 `tb_com_cd`(`/api/codes/{groupCd}`), 화면에서는 `useCode`·`CodeSelect`·`StatusBadge`로 표시
 - 새 기능에는 컨트롤러 테스트(`@WebMvcTest`)를 함께 작성
 
 ## 데이터 표준화 규칙 (필수)
@@ -43,13 +49,13 @@ cd frontend && npm run dev
 DB 객체 이름은 **공공데이터 공통표준**(용어·단어·도메인)을 따릅니다.
 
 표준 사전은 이 프로젝트의 기능(`std`)으로 관리합니다.
-- 원본 엑셀: `docs/standards/TB_용어.xlsx`, `TB_단어.xlsx`, `TB_도메인.xlsx`
+- 원본 엑셀: `docs/standard/TB_용어.xlsx`, `TB_단어.xlsx`, `TB_도메인.xlsx`
 - DB: `tb_std_trm`(표준용어), `tb_std_word`(표준단어), `tb_std_dmn`(표준도메인) — `db/init/02_std.sql`
 - 화면: http://localhost:3000/std (용어 확인, 검색, 엑셀 업로드)
 - DB가 비어 있으면(새 볼륨) 먼저 엑셀을 적재합니다. 화면의 "엑셀 업로드" 또는:
 
 ```bash
-cd docs/standards && curl -s -X POST localhost:8080/api/std/import -F "trmFile=@TB_용어.xlsx" -F "wordFile=@TB_단어.xlsx" -F "dmnFile=@TB_도메인.xlsx"
+cd docs/standard && curl -s -X POST localhost:8080/api/std/import -F "trmFile=@TB_용어.xlsx" -F "wordFile=@TB_단어.xlsx" -F "dmnFile=@TB_도메인.xlsx"
 ```
 
 Claude가 조회할 때는 **PowerShell**을 씁니다. (Git Bash의 curl은 한글 인자가 CP949로 깨집니다.)

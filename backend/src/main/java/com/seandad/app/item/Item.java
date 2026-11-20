@@ -14,6 +14,12 @@ public class Item {
     private Long itemSn;
     /** 품목명 */
     private String itemNm;
+    /** 품목내용 */
+    private String itemCn;
+    /** 사용여부 */
+    private String useYn;
     /** 등록일시 */
     private LocalDateTime regDt;
+    /** 수정일시 */
+    private LocalDateTime mdfcnDt;
 }

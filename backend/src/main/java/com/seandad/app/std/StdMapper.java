@@ -8,16 +8,17 @@ import org.apache.ibatis.annotations.Param;
 public interface StdMapper {
 
     // ---- 조회 ----
-    List<StdTrm> searchTrms(@Param("keyword") String keyword,
-                            @Param("includeDiscarded") boolean includeDiscarded,
-                            @Param("limit") int limit);
+    List<StdTrm> searchTrms(StdSearch search);
 
-    List<StdWord> searchWords(@Param("keyword") String keyword,
-                              @Param("includeDiscarded") boolean includeDiscarded,
-                              @Param("limit") int limit);
+    long countTrms(StdSearch search);
 
-    List<StdDmn> searchDmns(@Param("keyword") String keyword,
-                            @Param("includeDiscarded") boolean includeDiscarded);
+    List<StdWord> searchWords(StdSearch search);
+
+    long countWords(StdSearch search);
+
+    List<StdDmn> searchDmns(StdSearch search);
+
+    long countDmns(StdSearch search);
 
     List<StdTrm> findTrmsByNm(@Param("trmNm") String trmNm);
 
