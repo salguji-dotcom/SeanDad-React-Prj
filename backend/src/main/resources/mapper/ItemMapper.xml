@@ -2,16 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seandad.app.item.ItemMapper">
 
+    <!-- 품목 목록 조회 -->
     <select id="findAll" resultType="com.seandad.app.item.Item">
-        SELECT id, name, created_at
-          FROM item
-         ORDER BY id DESC
+        SELECT item_sn
+             , item_nm
+             , reg_dt
+          FROM tb_item
+         ORDER BY item_sn DESC
     </select>
 
+    <!-- 품목 등록 -->
     <insert id="insert" parameterType="com.seandad.app.item.Item"
-            useGeneratedKeys="true" keyProperty="id,createdAt" keyColumn="id,created_at">
-        INSERT INTO item (name)
-        VALUES (#{name})
+            useGeneratedKeys="true" keyProperty="itemSn,regDt" keyColumn="item_sn,reg_dt">
+        INSERT INTO tb_item (item_nm)
+        VALUES (#{itemNm})
     </insert>
 
 </mapper>

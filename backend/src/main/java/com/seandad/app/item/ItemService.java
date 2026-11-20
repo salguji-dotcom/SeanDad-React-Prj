@@ -19,7 +19,7 @@ public class ItemService {
     @Transactional
     public Item create(ItemCreateRequest request) {
         Item item = new Item();
-        item.setName(request.name());
+        item.setItemNm(request.itemNm());
         itemMapper.insert(item);
         return item;
     }

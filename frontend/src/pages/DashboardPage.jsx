@@ -30,33 +30,33 @@ export default function DashboardPage() {
 
       <section className="cards">
         <Link to="/items" className="card card-link">
-          <span className="card-label">Item</span>
+          <span className="card-label">품목</span>
           <strong className="card-value">{loading ? '-' : items.length}</strong>
-          <span className="card-sub">등록된 아이템 수</span>
-          <span className="card-go">Item 관리로 이동 →</span>
+          <span className="card-sub">등록된 품목 수</span>
+          <span className="card-go">품목 관리로 이동 →</span>
         </Link>
 
         <div className="card">
           <span className="card-label">최근 등록</span>
-          <strong className="card-value small">{latest ? latest.name : '-'}</strong>
-          <span className="card-sub">{latest ? formatDateTime(latest.createdAt) : '등록된 아이템 없음'}</span>
+          <strong className="card-value small">{latest ? latest.itemNm : '-'}</strong>
+          <span className="card-sub">{latest ? formatDateTime(latest.regDt) : '등록된 품목 없음'}</span>
         </div>
       </section>
 
       <section className="panel">
         <div className="panel-head">
-          <h2>최근 Item</h2>
+          <h2>최근 품목</h2>
           <Link to="/items">전체 보기</Link>
         </div>
         <ul className="list">
           {recent.map((item) => (
-            <li key={item.id}>
-              <span>{item.name}</span>
-              <small>{formatDateTime(item.createdAt)}</small>
+            <li key={item.itemSn}>
+              <span>{item.itemNm}</span>
+              <small>{formatDateTime(item.regDt)}</small>
             </li>
           ))}
           {!loading && recent.length === 0 && !error && (
-            <li className="empty">아이템이 없습니다.</li>
+            <li className="empty">품목이 없습니다.</li>
           )}
         </ul>
       </section>

@@ -13,7 +13,7 @@ export default function App() {
           <NavLink to="/" end>
             대시보드
           </NavLink>
-          <NavLink to="/items">Item</NavLink>
+          <NavLink to="/items">품목</NavLink>
         </nav>
       </header>
 

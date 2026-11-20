@@ -26,20 +26,21 @@ class ItemControllerTest {
     @Test
     void list() throws Exception {
         Item item = new Item();
-        item.setId(1L);
-        item.setName("첫 번째 아이템");
+        item.setItemSn(1L);
+        item.setItemNm("첫 번째 품목");
         given(itemService.findAll()).willReturn(List.of(item));
 
         mockMvc.perform(get("/api/items"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("첫 번째 아이템"));
+                .andExpect(jsonPath("$[0].itemSn").value(1))
+                .andExpect(jsonPath("$[0].itemNm").value("첫 번째 품목"));
     }
 
     @Test
     void createRejectsBlankName() throws Exception {
         mockMvc.perform(post("/api/items")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"\"}"))
+                        .content("{\"itemNm\":\"\"}"))
                 .andExpect(status().isBadRequest());
     }
 }

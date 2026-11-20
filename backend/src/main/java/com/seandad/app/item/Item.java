@@ -5,11 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/** 품목 (tb_item) */
 @Getter
 @Setter
 @NoArgsConstructor
 public class Item {
-    private Long id;
-    private String name;
-    private LocalDateTime createdAt;
+    /** 품목일련번호 */
+    private Long itemSn;
+    /** 품목명 */
+    private String itemNm;
+    /** 등록일시 */
+    private LocalDateTime regDt;
 }

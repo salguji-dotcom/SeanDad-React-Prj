@@ -12,5 +12,5 @@ async function request(url, options = {}) {
 
 export const fetchItems = () => request('/api/items');
 
-export const createItem = (name) =>
-  request('/api/items', { method: 'POST', body: JSON.stringify({ name }) });
+export const createItem = (itemNm) =>
+  request('/api/items', { method: 'POST', body: JSON.stringify({ itemNm }) });
