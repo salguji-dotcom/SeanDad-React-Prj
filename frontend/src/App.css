@@ -186,3 +186,184 @@ body {
   color: #888;
   justify-content: center;
 }
+
+/* ---- 표준 사전 ---- */
+.muted {
+  color: #777;
+  font-size: 14px;
+}
+
+.success {
+  color: #1a7f37;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 24px 0 8px;
+  border-bottom: 1px solid #e3e5e8;
+}
+
+.tab {
+  padding: 8px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: #555;
+  cursor: pointer;
+}
+
+.tab.active {
+  border-bottom-color: #2f6fed;
+  color: #2f6fed;
+  font-weight: 600;
+}
+
+.form .check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.form .check input {
+  flex: none;
+}
+
+.result-box {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e3e5e8;
+  border-left: 4px solid #2f6fed;
+  border-radius: 8px;
+}
+
+.result-box.warn {
+  border-left-color: #d98e04;
+}
+
+.result-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.result-head code,
+.grid .mono {
+  font-family: ui-monospace, Consolas, monospace;
+}
+
+.result-head code {
+  padding: 2px 6px;
+  background: #f0f2f5;
+  border-radius: 4px;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge.std {
+  background: #e8efff;
+  color: #2f6fed;
+}
+
+.badge.new {
+  background: #e6f6ea;
+  color: #1a7f37;
+}
+
+.badge.bad {
+  background: #fff3db;
+  color: #9a6400;
+}
+
+.messages {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  color: #9a6400;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid #e3e5e8;
+  border-radius: 8px;
+}
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.grid th,
+.grid td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #eef0f2;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.grid th {
+  background: #f7f8fa;
+  color: #555;
+  font-weight: 600;
+}
+
+.grid td.desc {
+  min-width: 240px;
+  white-space: pre-line;
+  color: #666;
+}
+
+.grid tr.discarded td {
+  color: #aaa;
+  text-decoration: line-through;
+}
+
+.grid td.empty {
+  text-align: center;
+  color: #888;
+}
+
+.upload {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e3e5e8;
+  border-radius: 8px;
+}
+
+.upload-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.upload button {
+  align-self: flex-start;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 6px;
+  background: #2f6fed;
+  color: #fff;
+  cursor: pointer;
+}
+
+.upload button:disabled {
+  background: #a9bff2;
+  cursor: default;
+}

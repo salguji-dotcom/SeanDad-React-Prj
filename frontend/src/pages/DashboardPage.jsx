@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchItems } from '../api/itemApi.js';
+import { fetchStdSummary } from '../api/stdApi.js';
 import { formatDateTime } from '../utils/format.js';
 
 const RECENT_COUNT = 5;
 
 export default function DashboardPage() {
   const [items, setItems] = useState([]);
+  const [std, setStd] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -15,9 +17,12 @@ export default function DashboardPage() {
       .then(setItems)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
+    fetchStdSummary()
+      .then(setStd)
+      .catch(() => setStd(null));
   }, []);
 
-  // API가 id 내림차순으로 주므로 첫 항목이 가장 최근
+  // API가 품목일련번호 내림차순으로 주므로 첫 항목이 가장 최근
   const latest = items[0];
   const recent = items.slice(0, RECENT_COUNT);
 
@@ -41,6 +46,15 @@ export default function DashboardPage() {
           <strong className="card-value small">{latest ? latest.itemNm : '-'}</strong>
           <span className="card-sub">{latest ? formatDateTime(latest.regDt) : '등록된 품목 없음'}</span>
         </div>
+
+        <Link to="/std" className="card card-link">
+          <span className="card-label">표준 사전</span>
+          <strong className="card-value">{std ? std.trmCnt.toLocaleString() : '-'}</strong>
+          <span className="card-sub">
+            {std ? `용어 · 단어 ${std.wordCnt.toLocaleString()} · 도메인 ${std.dmnCnt}` : '표준 사전 조회 실패'}
+          </span>
+          <span className="card-go">표준 사전으로 이동 →</span>
+        </Link>
       </section>
 
       <section className="panel">

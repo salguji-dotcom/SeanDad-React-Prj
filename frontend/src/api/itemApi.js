@@ -1,14 +1,4 @@
-async function request(url, options = {}) {
-  const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.message || `요청 실패 (${res.status})`);
-  }
-  return res.status === 204 ? null : res.json();
-}
+import { request } from './client.js';
 
 export const fetchItems = () => request('/api/items');
 

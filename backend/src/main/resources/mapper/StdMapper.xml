@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seandad.app.std.StdMapper">
+
+    <!-- 표준용어 검색 (용어명 또는 영문약어명 부분일치, 정확히 일치하는 용어 우선) -->
+    <select id="searchTrms" resultType="com.seandad.app.std.StdTrm">
+        SELECT trm_sn, enct_cycl_nm, trm_nm, trm_expln, eng_abbr_nm, dmn_nm, prm_vl_cn
+             , strg_frm_nm, indct_frm_nm, pbadms_std_cd_nm, jrsd_inst_nm, synm_cn, dscd_yn
+          FROM tb_std_trm
+         WHERE (trm_nm LIKE '%' || #{keyword} || '%'
+                OR eng_abbr_nm LIKE '%' || UPPER(#{keyword}) || '%')
+        <if test="!includeDiscarded">
+           AND dscd_yn = 'N'
+        </if>
+         ORDER BY CASE WHEN trm_nm = #{keyword} OR eng_abbr_nm = UPPER(#{keyword}) THEN 0 ELSE 1 END
+                , LENGTH(trm_nm), trm_nm
+         LIMIT #{limit}
+    </select>
+
+    <!-- 표준단어 검색 (단어명 부분일치, 영문약어명 일치, 이음동의어·금칙어 포함) -->
+    <select id="searchWords" resultType="com.seandad.app.std.StdWord">
+        SELECT word_sn, enct_cycl_nm, word_nm, eng_abbr_nm, eng_nm, word_expln
+             , frm_word_yn, dmn_clsf_nm, synm_cn, phwrd_cn, dscd_yn
+          FROM tb_std_word
+         WHERE (word_nm LIKE '%' || #{keyword} || '%'
+                OR eng_abbr_nm = UPPER(#{keyword})
+                OR synm_cn LIKE '%' || #{keyword} || '%'
+                OR phwrd_cn LIKE '%' || #{keyword} || '%')
+        <if test="!includeDiscarded">
+           AND dscd_yn = 'N'
+        </if>
+         ORDER BY CASE WHEN word_nm = #{keyword} THEN 0 ELSE 1 END
+                , LENGTH(word_nm), word_nm
+         LIMIT #{limit}
+    </select>
+
+    <!-- 표준도메인 검색 (도메인명·분류명·그룹명 부분일치, 빈 값이면 전체) -->
+    <select id="searchDmns" resultType="com.seandad.app.std.StdDmn">
+        SELECT dmn_sn, enct_cycl_nm, dmn_group_nm, dmn_clsf_nm, dmn_nm, dmn_expln, data_type_nm
+             , data_len, data_dcpt_len, strg_frm_nm, indct_frm_nm, unit_nm, prm_vl_cn, dscd_yn
+          FROM tb_std_dmn
+         WHERE (dmn_nm LIKE '%' || #{keyword} || '%'
+                OR dmn_clsf_nm LIKE '%' || #{keyword} || '%'
+                OR dmn_group_nm LIKE '%' || #{keyword} || '%')
+        <if test="!includeDiscarded">
+           AND dscd_yn = 'N'
+        </if>
+         ORDER BY dmn_group_nm, dmn_clsf_nm, data_len NULLS FIRST, dmn_sn
+    </select>
+
+    <select id="findTrmsByNm" resultType="com.seandad.app.std.StdTrm">
+        SELECT trm_sn, enct_cycl_nm, trm_nm, trm_expln, eng_abbr_nm, dmn_nm, prm_vl_cn
+             , strg_frm_nm, indct_frm_nm, pbadms_std_cd_nm, jrsd_inst_nm, synm_cn, dscd_yn
+          FROM tb_std_trm
+         WHERE trm_nm = #{trmNm}
+           AND dscd_yn = 'N'
+         ORDER BY trm_sn
+    </select>
+
+    <select id="findActiveWords" resultType="com.seandad.app.std.StdWord">
+        SELECT word_sn, word_nm, eng_abbr_nm, frm_word_yn, dmn_clsf_nm, synm_cn, phwrd_cn
+          FROM tb_std_word
+         WHERE dscd_yn = 'N'
+    </select>
+
+    <select id="findDmnNmsByClsf" resultType="string">
+        SELECT dmn_nm
+          FROM tb_std_dmn
+         WHERE dmn_clsf_nm = #{dmnClsfNm}
+           AND dscd_yn = 'N'
+         ORDER BY data_len NULLS FIRST, data_dcpt_len NULLS FIRST, dmn_sn
+    </select>
+
+    <select id="countActive" resultType="com.seandad.app.std.StdSummary">
+        SELECT (SELECT COUNT(*) FROM tb_std_trm  WHERE dscd_yn = 'N') AS trm_cnt
+             , (SELECT COUNT(*) FROM tb_std_word WHERE dscd_yn = 'N') AS word_cnt
+             , (SELECT COUNT(*) FROM tb_std_dmn  WHERE dscd_yn = 'N') AS dmn_cnt
+    </select>
+
+    <!-- ===== 엑셀 적재 ===== -->
+    <delete id="deleteAllTrms">DELETE FROM tb_std_trm</delete>
+    <delete id="deleteAllWords">DELETE FROM tb_std_word</delete>
+    <delete id="deleteAllDmns">DELETE FROM tb_std_dmn</delete>
+
+    <insert id="insertTrms">
+        INSERT INTO tb_std_trm (trm_sn, enct_cycl_nm, trm_nm, trm_expln, eng_abbr_nm, dmn_nm, prm_vl_cn
+                              , strg_frm_nm, indct_frm_nm, pbadms_std_cd_nm, jrsd_inst_nm, synm_cn, dscd_yn)
+        VALUES
+        <foreach collection="list" item="r" separator=",">
+            (#{r.trmSn}, #{r.enctCyclNm}, #{r.trmNm}, #{r.trmExpln}, #{r.engAbbrNm}, #{r.dmnNm}, #{r.prmVlCn}
+           , #{r.strgFrmNm}, #{r.indctFrmNm}, #{r.pbadmsStdCdNm}, #{r.jrsdInstNm}, #{r.synmCn}, #{r.dscdYn})
+        </foreach>
+    </insert>
+
+    <insert id="insertWords">
+        INSERT INTO tb_std_word (word_sn, enct_cycl_nm, word_nm, eng_abbr_nm, eng_nm, word_expln
+                               , frm_word_yn, dmn_clsf_nm, synm_cn, phwrd_cn, dscd_yn)
+        VALUES
+        <foreach collection="list" item="r" separator=",">
+            (#{r.wordSn}, #{r.enctCyclNm}, #{r.wordNm}, #{r.engAbbrNm}, #{r.engNm}, #{r.wordExpln}
+           , #{r.frmWordYn}, #{r.dmnClsfNm}, #{r.synmCn}, #{r.phwrdCn}, #{r.dscdYn})
+        </foreach>
+    </insert>
+
+    <insert id="insertDmns">
+        INSERT INTO tb_std_dmn (dmn_sn, enct_cycl_nm, dmn_group_nm, dmn_clsf_nm, dmn_nm, dmn_expln, data_type_nm
+                              , data_len, data_dcpt_len, strg_frm_nm, indct_frm_nm, unit_nm, prm_vl_cn, dscd_yn)
+        VALUES
+        <foreach collection="list" item="r" separator=",">
+            (#{r.dmnSn}, #{r.enctCyclNm}, #{r.dmnGroupNm}, #{r.dmnClsfNm}, #{r.dmnNm}, #{r.dmnExpln}, #{r.dataTypeNm}
+           , #{r.dataLen}, #{r.dataDcptLen}, #{r.strgFrmNm}, #{r.indctFrmNm}, #{r.unitNm}, #{r.prmVlCn}, #{r.dscdYn})
+        </foreach>
+    </insert>
+
+</mapper>

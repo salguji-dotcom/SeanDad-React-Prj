@@ -41,25 +41,42 @@ cd frontend && npm run dev
 ## 데이터 표준화 규칙 (필수)
 
 DB 객체 이름은 **공공데이터 공통표준**(용어·단어·도메인)을 따릅니다.
-표준 사전은 `docs/standards/`에 있고(원본: `C:/SeanDad/10.Excel/TB_용어.xlsx`, `TB_단어.xlsx`, `TB_도메인.xlsx`), 조회는 아래 도구로 합니다.
+
+표준 사전은 이 프로젝트의 기능(`std`)으로 관리합니다.
+- 원본 엑셀: `docs/standards/TB_용어.xlsx`, `TB_단어.xlsx`, `TB_도메인.xlsx`
+- DB: `tb_std_trm`(표준용어), `tb_std_word`(표준단어), `tb_std_dmn`(표준도메인) — `db/init/02_std.sql`
+- 화면: http://localhost:3000/std (용어 확인, 검색, 엑셀 업로드)
+- DB가 비어 있으면(새 볼륨) 먼저 엑셀을 적재합니다. 화면의 "엑셀 업로드" 또는:
 
 ```bash
-python -X utf8 docs/standards/std.py make 품목명        # 표준용어 확인, 없으면 단어 조합으로 신규 용어 제안
-python -X utf8 docs/standards/std.py term 등록일시      # 용어 검색 (한글명/영문약어)
-python -X utf8 docs/standards/std.py word 아이디        # 단어 검색 (동의어·금칙어 포함)
-python -X utf8 docs/standards/std.py domain 명V         # 도메인 검색
+cd docs/standards && curl -s -X POST localhost:8080/api/std/import -F "trmFile=@TB_용어.xlsx" -F "wordFile=@TB_단어.xlsx" -F "dmnFile=@TB_도메인.xlsx"
 ```
+
+Claude가 조회할 때는 **PowerShell**을 씁니다. (Git Bash의 curl은 한글 인자가 CP949로 깨집니다.)
+
+```powershell
+$api = 'http://localhost:8080/api/std'; $q = { [uri]::EscapeDataString($args[0]) }
+# 표준용어 확인, 없으면 단어 조합으로 신규 용어 제안 (standard / valid / engAbbrNm / dmnNm / dmnCandidates / messages)
+Invoke-RestMethod "$api/terms/suggest?trmNm=$(& $q '등록자아이디')" | ConvertTo-Json -Depth 4
+Invoke-RestMethod "$api/terms?keyword=$(& $q '등록일시')"     # 용어 검색 (한글명/영문약어, 최대 100건)
+Invoke-RestMethod "$api/words?keyword=$(& $q '아이디')"       # 단어 검색 (이음동의어·금칙어 포함)
+Invoke-RestMethod "$api/domains?keyword=$(& $q '명')"         # 도메인 검색 (빈 값이면 전체)
+# 폐기 항목까지 보려면 &includeDiscarded=true
+```
+
+- 앱이 떠 있지 않으면 `docker compose up -d`로 먼저 띄웁니다.
+- 판정 로직은 `backend/.../std/StdService.java`의 `suggest`에 있습니다.
 
 ### 컬럼 이름 정하는 순서
 
 1. **표준용어 사전에 있으면 그대로 사용합니다.** 한글 용어명, 영문약어명, 도메인을 모두 사전대로 씁니다.
-2. **없으면 표준단어를 조합해 신규 용어를 만듭니다** (`std.py make`).
+2. **없으면 표준단어를 조합해 신규 용어를 만듭니다** (`/api/std/terms/suggest`).
    - 영문약어명은 단어 약어를 `_`로 연결합니다. (등록자 + 아이디 → `RGTR_ID`)
    - 용어는 **형식단어**(명, 번호, 일련번호, 일시, 일자, 여부, 코드, 내용, 금액, 수 등)로 끝나야 합니다.
    - 도메인은 마지막 형식단어의 도메인 분류 안에서 고릅니다.
    - **이음동의어·금칙어는 쓰지 않고 표준단어로 바꿉니다.** (유저 → 사용자, 시퀀스 → 일련번호)
 3. **표준단어에도 없으면 임의로 만들지 않습니다.** 사용자에게 신규 단어(한글명, 영문약어, 영문명) 등록 여부를 먼저 묻습니다.
-4. 제정차수에 `(폐기)`가 붙은 항목은 사용하지 않습니다. (`std.py`는 기본으로 제외)
+4. 제정차수에 `(폐기)`가 붙은 항목(`dscd_yn = 'Y'`)은 사용하지 않습니다. (조회 API는 기본으로 제외)
 5. 신규 용어나 신규 단어를 만들었으면 작업 결과에 목록으로 알려 줍니다.
 
 ### 테이블 이름
